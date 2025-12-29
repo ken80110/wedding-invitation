@@ -48,7 +48,6 @@
             background-position: center;
             z-index: 0;
             transform: scale(1.1);
-            will-change: transform;
             opacity: 0;
             transition: opacity 1.5s ease;
         }
@@ -77,22 +76,16 @@
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.95);
-            z-index: 3000;
+            z-index: 5000;
             cursor: zoom-out;
             opacity: 0;
             transition: opacity 0.4s ease;
             padding: 20px;
         }
         #lightbox.active { display: flex; opacity: 1; }
-        #lightbox img {
-            max-width: 90%;
-            max-height: 80vh;
-            margin: auto;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            object-fit: contain;
-        }
+        #lightbox img { max-width: 90%; max-height: 80vh; margin: auto; object-fit: contain; }
 
-        /* 更多照片彈跳視窗 (More Photos Modal) */
+        /* 更多照片視窗 */
         #more-photos-modal {
             display: none;
             position: fixed;
@@ -105,6 +98,51 @@
         }
         #more-photos-modal.active { display: block; opacity: 1; }
 
+        /* 住宿選擇 Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 4000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--bg-color);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .room-card {
+            border: 1px solid var(--accent-line);
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        .room-card:hover:not(.sold-out) { border-color: var(--accent-red); background: #fff; }
+        .room-card.selected { border-color: var(--accent-red); background: #fff6f5; outline: 2px solid var(--accent-red); }
+        .room-card.sold-out { opacity: 0.4; cursor: not-allowed; background: #eee; }
+        .room-card.sold-out::after {
+            content: '已售罄';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            color: var(--accent-red);
+            font-weight: bold;
+            border: 2px solid var(--accent-red);
+            padding: 2px 8px;
+        }
+
         /* 流程時間軸 */
         .schedule-line {
             width: 1px;
@@ -115,129 +153,72 @@
             transform: translateX(-50%);
         }
 
-        /* 按鈕設計 */
-        .btn-submit, .btn-more {
-            padding: 16px 40px;
+        .btn-submit, .btn-more, .btn-select-room {
+            padding: 14px 32px;
             border: 1px solid var(--text-main);
             position: relative;
-            z-index: 1;
-            transition: color 0.4s;
-            overflow: hidden;
-            display: inline-block;
+            transition: all 0.4s;
             cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-        .btn-submit::after, .btn-more::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 0%; height: 100%;
-            background: var(--text-main);
-            z-index: -1;
-            transition: width 0.4s ease;
-        }
-        .btn-submit:hover, .btn-more:hover { color: white; }
-        .btn-submit:hover::after, .btn-more:hover::after { width: 100%; }
+        .btn-submit:hover, .btn-more:hover { background: var(--text-main); color: #fff; }
 
-        /* 狀態通知列 - 正中間樣式 */
         #status-msg {
             position: fixed;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             padding: 2rem 3rem;
             background: #1a1a1a;
             color: #fff;
-            z-index: 5000;
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
+            z-index: 6000;
             text-align: center;
             box-shadow: 0 20px 50px rgba(0,0,0,0.4);
             transform: translate(-50%, -40%) scale(0.9);
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0;
-            visibility: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            pointer-events: none;
+            opacity: 0; visibility: hidden;
             white-space: nowrap;
         }
-        #status-msg.active {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-            visibility: visible;
-        }
+        #status-msg.active { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
 
-        /* 輸入框通用樣式 */
         input, select, textarea {
-            background: transparent;
-            border-bottom: 1px solid var(--accent-line);
-            padding: 12px 0;
-            width: 100%;
-            outline: none;
-            border-radius: 0;
-            transition: border-color 0.3s;
+            background: transparent; border-bottom: 1px solid var(--accent-line); padding: 12px 0; width: 100%; outline: none;
         }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--accent-red);
-        }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-red); }
 
-        .countdown-item span:first-child {
-            display: block;
-            font-size: 2.5rem;
-            line-height: 1;
-        }
-        @media (min-width: 768px) {
-            .countdown-item span:first-child { font-size: 4rem; }
-        }
+        .countdown-item span:first-child { display: block; font-size: 2.5rem; line-height: 1; }
+        @media (min-width: 768px) { .countdown-item span:first-child { font-size: 4rem; } }
     </style>
 </head>
 <body>
 
-    <!-- 狀態通知列 -->
     <div id="status-msg">正在處理您的回覆...</div>
 
     <!-- 導覽列 -->
     <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 md:px-12 py-6 mix-blend-difference text-white">
         <div class="text-xl font-bold tracking-[0.3em] uppercase">W & S</div>
         <div class="hidden md:flex space-x-10 text-[10px] tracking-widest uppercase">
-            <a href="#couple" class="hover:opacity-60 transition">The Couple</a>
-            <a href="#video" class="hover:opacity-60 transition">Teaser</a>
-            <a href="#schedule" class="hover:opacity-60 transition">Schedule</a>
-            <a href="#gallery" class="hover:opacity-60 transition">Gallery</a>
-            <a href="#location" class="hover:opacity-60 transition">Location</a>
-            <a href="#rsvp" class="hover:opacity-60 transition">RSVP</a>
+            <a href="#couple">The Couple</a>
+            <a href="#video">Teaser</a>
+            <a href="#schedule">Schedule</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#location">Location</a>
+            <a href="#rsvp">RSVP</a>
         </div>
-        <div class="md:hidden"><i data-lucide="menu"></i></div>
     </nav>
 
     <!-- 1. Hero Section -->
     <section class="parallax-container">
-        <!-- 優化：加上 tr:w-1920,q-80 (寬度1920, 品質80%) -->
-        <div class="parallax-bg hero-bg" 
-             style="background-image: url('https://ik.imagekit.io/ofxw3fpip/5D3_7623.jpg?tr=w-1920,q-80');"
-             data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7623.jpg?tr=w-1920,q-80"></div>
-        
+        <div class="parallax-bg hero-bg" style="background-image: url('https://ik.imagekit.io/ofxw3fpip/5D3_7623.jpg?tr=w-1920,q-80');" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7623.jpg?tr=w-1920,q-80"></div>
         <div class="absolute inset-0 bg-black/30 z-[1]"></div>
-        
         <div class="relative z-10 text-center text-white px-6">
             <p class="text-sm tracking-[0.5em] mb-4 opacity-0 hero-el">2026.03.21</p>
             <h1 class="text-5xl md:text-9xl leading-none serif-en italic mb-12 opacity-0 hero-el">Eternal Bonds</h1>
-            
-            <!-- 日期倒數區塊 -->
             <div id="countdown" class="flex space-x-6 md:space-x-12 justify-center opacity-0 hero-el">
-                <div class="countdown-item text-center">
-                    <span class="serif-en days">00</span>
-                    <span class="text-[10px] uppercase tracking-widest opacity-60">Days</span>
-                </div>
-                <div class="countdown-item text-center">
-                    <span class="serif-en hours">00</span>
-                    <span class="text-[10px] uppercase tracking-widest opacity-60">Hrs</span>
-                </div>
-                <div class="countdown-item text-center">
-                    <span class="serif-en mins">00</span>
-                    <span class="text-[10px] uppercase tracking-widest opacity-60">Mins</span>
-                </div>
-                <div class="countdown-item text-center">
-                    <span class="serif-en secs">00</span>
-                    <span class="text-[10px] uppercase tracking-widest opacity-60">Secs</span>
-                </div>
+                <div class="countdown-item text-center"><span class="serif-en days">00</span><span class="text-[10px] uppercase tracking-widest opacity-60">Days</span></div>
+                <div class="countdown-item text-center"><span class="serif-en hours">00</span><span class="text-[10px] uppercase tracking-widest opacity-60">Hrs</span></div>
+                <div class="countdown-item text-center"><span class="serif-en mins">00</span><span class="text-[10px] uppercase tracking-widest opacity-60">Mins</span></div>
+                <div class="countdown-item text-center"><span class="serif-en secs">00</span><span class="text-[10px] uppercase tracking-widest opacity-60">Secs</span></div>
             </div>
         </div>
     </section>
@@ -247,27 +228,20 @@
         <div class="grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
             <div class="md:col-span-5 reveal-item">
                 <div class="img-wrapper aspect-[3/4] mb-8">
-                    <!-- 優化：人物照 tr:w-800 -->
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8867.jpg?tr=w-800,q-80" alt="新郎照">
+                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8867.jpg?tr=w-800,q-80" alt="新郎">
                 </div>
                 <h3 class="text-3xl serif-en italic mb-2 text-[#a63d33]">The Groom</h3>
                 <h2 class="text-2xl font-bold mb-4">劉宗韋 Tsung-Wei</h2>
-                <p class="text-sm text-gray-500 leading-relaxed">
-                    沈穩如窗花的線條，建築師的背景讓他細膩於生活的每一處節奏。
-                </p>
+                <p class="text-sm text-gray-500 leading-relaxed">沈穩如窗花的線條，建築師的背景讓他細膩於生活的每一處節奏。</p>
             </div>
-            <div class="md:col-span-2 hidden md:flex justify-center">
-                <div class="h-64 w-[1px] bg-stone-200"></div>
-            </div>
+            <div class="md:col-span-2 hidden md:flex justify-center"><div class="h-64 w-[1px] bg-stone-200"></div></div>
             <div class="md:col-span-5 md:mt-48 reveal-item">
                 <div class="img-wrapper aspect-[3/4] mb-8">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8462.jpg?tr=w-800,q-80" alt="新娘照">
+                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8462.jpg?tr=w-800,q-80" alt="新娘">
                 </div>
                 <h3 class="text-3xl serif-en italic mb-2 text-[#a63d33]">The Bride</h3>
                 <h2 class="text-2xl font-bold mb-4">陳瑋珊 Wei-Shan</h2>
-                <p class="text-sm text-gray-500 leading-relaxed">
-                    熱情如灑進窗花的光，平面設計師的她為生活注入色彩。
-                </p>
+                <p class="text-sm text-gray-500 leading-relaxed">熱情如灑進窗花的光，平面設計師的她為生活注入色彩。</p>
             </div>
         </div>
     </section>
@@ -282,114 +256,54 @@
     </section>
 
     <!-- 4. Schedule -->
-    <section id="schedule" class="py-32 px-6 bg-white">
-        <h2 class="text-center text-[10px] tracking-[0.5em] text-gray-300 mb-20 uppercase">Wedding Schedule</h2>
-        <div class="max-w-2xl mx-auto relative">
+    <section id="schedule" class="py-32 px-6 bg-white text-center">
+        <h2 class="text-[10px] tracking-[0.5em] text-gray-300 mb-20 uppercase">Wedding Schedule</h2>
+        <div class="max-w-2xl mx-auto relative text-left">
             <div class="schedule-line hidden md:block"></div>
-            
             <div class="relative pl-10 md:pl-0 md:flex md:items-center mb-20 reveal-item">
-                <div class="md:w-1/2 md:text-right md:pr-12">
-                    <h4 class="serif-en text-xl text-[#a63d33]">15:30 PM</h4>
-                </div>
+                <div class="md:w-1/2 md:text-right md:pr-12 text-[#a63d33] serif-en text-xl">15:30 PM</div>
                 <div class="absolute left-0 md:left-1/2 md:translate-x-[-50%] w-2 h-2 rounded-full bg-stone-800"></div>
-                <div class="md:w-1/2 md:pl-12">
-                    <h4 class="text-lg font-bold">賓客入場</h4>
-                    <p class="text-xs text-gray-400">Welcome Reception</p>
-                </div>
+                <div class="md:w-1/2 md:pl-12 font-bold">賓客入場</div>
             </div>
-
             <div class="relative pl-10 md:pl-0 md:flex md:items-center mb-20 reveal-item">
-                <div class="md:w-1/2 md:order-2 md:pl-12">
-                    <h4 class="serif-en text-xl text-[#a63d33]">16:00 PM</h4>
-                </div>
+                <div class="md:w-1/2 md:order-2 md:pl-12 text-[#a63d33] serif-en text-xl">16:00 PM</div>
                 <div class="absolute left-0 md:left-1/2 md:translate-x-[-50%] w-2 h-2 rounded-full bg-stone-800"></div>
-                <div class="md:w-1/2 md:order-1 md:text-right md:pr-12">
-                    <h4 class="text-lg font-bold">證婚儀式</h4>
-                    <p class="text-xs text-gray-400">Wedding Ceremony</p>
-                </div>
+                <div class="md:w-1/2 md:order-1 md:text-right md:pr-12 font-bold">證婚儀式</div>
             </div>
-
             <div class="relative pl-10 md:pl-0 md:flex md:items-center reveal-item">
-                <div class="md:w-1/2 md:text-right md:pr-12">
-                    <h4 class="serif-en text-xl text-[#a63d33]">18:00 PM</h4>
-                </div>
+                <div class="md:w-1/2 md:text-right md:pr-12 text-[#a63d33] serif-en text-xl">18:00 PM</div>
                 <div class="absolute left-0 md:left-1/2 md:translate-x-[-50%] w-2 h-2 rounded-full bg-stone-800"></div>
-                <div class="md:w-1/2 md:pl-12">
-                    <h4 class="text-lg font-bold">晚宴開始</h4>
-                    <p class="text-xs text-gray-400">Wedding Banquet</p>
-                </div>
+                <div class="md:w-1/2 md:pl-12 font-bold">晚宴開始</div>
             </div>
         </div>
     </section>
 
     <!-- 5. Gallery -->
     <section id="gallery" class="py-32 px-6 md:px-20 bg-stone-50 text-center">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4 text-center md:text-left">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4 text-left">
             <h2 class="text-5xl md:text-7xl serif-en italic">Gallery</h2>
             <p class="text-[10px] tracking-widest text-gray-400 uppercase">點擊圖片放大瀏覽</p>
         </div>
-        <!-- 精選 4 張展示 -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-16">
-            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)">
-                <!-- 優化：縮圖 tr:w-600 -->
-                <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7921.jpg?tr=w-600,q-80" alt="相片1">
-            </div>
-            <div class="img-wrapper cursor-zoom-in md:mt-24 reveal-item" onclick="openLightbox(this)">
-                <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7411.jpg?tr=w-600,q-80" alt="相片2">
-            </div>
-            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)">
-                <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8053.jpg?tr=w-600,q-80" alt="相片3">
-            </div>
-            <div class="img-wrapper cursor-zoom-in md:mt-24 reveal-item" onclick="openLightbox(this)">
-                <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8925.jpg?tr=w-600,q-80" alt="相片4">
-            </div>
+            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7921.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in md:mt-24 reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7411.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8053.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in md:mt-24 reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8925.jpg?tr=w-600"></div>
         </div>
-        <!-- 更多照片按鈕 -->
-        <div class="reveal-item">
-            <button class="btn-more uppercase text-[12px] tracking-[0.4em] font-bold" onclick="openMorePhotos()">
-                更多照片 VIEW MORE
-            </button>
-        </div>
+        <button class="btn-more font-bold" onclick="openMorePhotos()">更多照片 VIEW MORE</button>
     </section>
 
     <!-- 更多照片彈跳視窗 -->
     <div id="more-photos-modal">
-        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-8 flex justify-between items-center border-b border-stone-200">
+        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-8 flex justify-between items-center border-b">
             <h2 class="text-3xl serif-en italic">More Moments</h2>
-            <button onclick="closeMorePhotos()" class="p-2 hover:opacity-50 transition">
-                <i data-lucide="x" class="w-8 h-8"></i>
-            </button>
+            <button onclick="closeMorePhotos()"><i data-lucide="x" class="w-8 h-8"></i></button>
         </div>
-        <div class="px-6 md:px-20 py-16">
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-                <!-- 在此加入更多照片 -->
-                <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7921.jpg?tr=w-600,q-80">
-                </div>
-                <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7411.jpg?tr=w-600,q-80">
-                </div>
-                <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8053.jpg?tr=w-600,q-80">
-                </div>
-                <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8925.jpg?tr=w-600,q-80">
-                </div>
-                <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7623.jpg?tr=w-600,q-80">
-                </div>
-                <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8867.jpg?tr=w-600,q-80">
-                </div>
-                <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8462.jpg?tr=w-600,q-80">
-                </div>
-            </div>
-        </div>
-        <div class="py-20 text-center border-t border-stone-100">
-            <button onclick="closeMorePhotos()" class="btn-more uppercase text-[12px] tracking-[0.4em] font-bold">
-                回主頁 BACK
-            </button>
+        <div class="px-6 md:px-20 py-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7921.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7411.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8053.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8925.jpg?tr=w-600"></div>
         </div>
     </div>
 
@@ -397,21 +311,17 @@
     <section id="location" class="py-32 px-6 md:px-20">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
             <div class="reveal-item">
-                <div class="img-wrapper aspect-video mb-10">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/C1171697139215.jpg?tr=w-1200,q-80" alt="宴客地點">
-                </div>
+                <div class="img-wrapper aspect-video mb-10"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/C1171697139215.jpg?tr=w-1200" alt="地點"></div>
                 <h3 class="text-3xl serif-en italic mb-4 text-[#a63d33]">The Venue</h3>
                 <h2 class="text-2xl font-bold mb-4">滝貓谷山林漫遊渡假村</h2>
-                <p class="text-gray-500 mb-10 leading-relaxed">苗栗縣卓蘭鎮25號</p>
+                <p class="text-gray-500 mb-10">苗栗縣卓蘭鎮25號</p>
                 <a href="https://share.google/23uKRCNJMt2eg0nzc" target="_blank" class="px-8 py-3 bg-stone-900 text-white text-[10px] tracking-widest uppercase hover:bg-black transition inline-block">Google Maps 導航</a>
             </div>
-            <div class="order-1 md:order-2 text-center md:text-right">
-                <h2 class="text-6xl md:text-9xl serif-en italic opacity-10">Location</h2>
-            </div>
+            <div class="order-first md:order-last text-6xl md:text-9xl serif-en italic opacity-10">Location</div>
         </div>
     </section>
 
-    <!-- 7. RSVP: 回覆表單 -->
+    <!-- 7. RSVP Section -->
     <section id="rsvp" class="py-32 px-6 md:px-20 bg-stone-100">
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-20">
@@ -420,215 +330,200 @@
             </div>
             
             <form id="rsvpForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
-                <!-- 左側欄位 -->
                 <div class="flex flex-col space-y-12">
-                    <div class="w-full">
-                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">姓名 Name</label>
-                        <input type="text" name="name" required placeholder="請輸入您的姓名">
-                    </div>
-                    
+                    <input type="text" name="name" required placeholder="姓名 Name">
                     <div class="grid grid-cols-2 gap-8">
-                        <div class="w-full">
-                            <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">大人數 Adults</label>
-                            <select name="adults" id="adults">
-                                <script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 位</option>`);</script>
-                            </select>
-                        </div>
-                        <div class="w-full">
-                            <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">小孩數 Children</label>
-                            <select name="children" id="children">
-                                <script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 位</option>`);</script>
-                            </select>
-                        </div>
+                        <div><label class="text-[12px] text-gray-400">大人 Adults</label><select name="adults" id="adults"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 位</option>`);</script></select></div>
+                        <div><label class="text-[12px] text-gray-400">小孩 Children</label><select name="children" id="children"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 位</option>`);</script></select></div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-8">
-                        <div class="w-full">
-                            <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">葷食 Meat</label>
-                            <select name="meat" id="meat">
-                                <script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 份</option>`);</script>
-                            </select>
-                        </div>
-                        <div class="w-full">
-                            <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">素食 Veggie</label>
-                            <select name="veggie" id="veggie">
-                                <script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 份</option>`);</script>
-                            </select>
-                        </div>
+                        <div><label class="text-[12px] text-gray-400">葷食 Meat</label><select name="meat" id="meat"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 份</option>`);</script></select></div>
+                        <div><label class="text-[12px] text-gray-400">素食 Veggie</label><select name="veggie" id="veggie"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 份</option>`);</script></select></div>
                     </div>
                 </div>
 
-                <!-- 右側欄位 -->
-                <div class="flex flex-col h-full">
-                    <div class="w-full mb-12">
-                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">聯絡電話 Phone</label>
-                        <input type="tel" name="phone" required placeholder="請輸入聯絡電話">
+                <div class="flex flex-col h-full space-y-12">
+                    <input type="tel" name="phone" required placeholder="聯絡電話 Phone">
+                    <div class="w-full">
+                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">住宿需求 Accommodation</label>
+                        <div id="room-selection-display" class="border border-dashed border-stone-400 p-4 text-center cursor-pointer hover:bg-stone-200" onclick="openRoomModal()">
+                            <p class="text-xs text-stone-500" id="selected-room-text">正在更新房況...</p>
+                            <input type="hidden" name="room_type" id="input_room_type" value="無">
+                            <input type="hidden" name="need_room" id="input_need_room" value="不需要">
+                            <input type="hidden" name="add_bed" id="input_add_bed" value="否">
+                        </div>
                     </div>
-                    <div class="w-full flex-grow flex flex-col">
-                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">想對我們說的話 Message</label>
-                        <textarea name="message" class="flex-grow min-h-[160px] md:min-h-0" placeholder="備註或祝福語..."></textarea>
-                    </div>
+                    <textarea name="message" class="flex-grow min-h-[100px]" placeholder="想對我們說的話..."></textarea>
                 </div>
 
                 <div class="col-span-1 md:col-span-2 text-center mt-8">
-                    <button type="submit" id="submitBtn" class="btn-submit uppercase text-[12px] tracking-[0.4em] font-bold w-full md:w-auto">
-                        確認送出 SEND RSVP
-                    </button>
-                    <p id="validation-tip" class="text-[10px] text-[#a63d33] mt-4 opacity-0 transition-opacity">※ 總人數與餐食份數不符，請檢查後再送出。</p>
+                    <button type="submit" id="submitBtn" class="btn-submit font-bold w-full md:w-auto">確認送出 SEND RSVP</button>
+                    <p id="validation-tip" class="text-[10px] text-[#a63d33] mt-4 opacity-0 transition-opacity">※ 總人數與餐食份數不符。</p>
                 </div>
             </form>
         </div>
     </section>
 
-    <footer class="py-24 text-center border-t border-stone-200">
-        <div class="serif-en text-4xl italic mb-6">W & S</div>
-        <p class="text-[10px] uppercase tracking-widest opacity-30">&copy; 2026 THE WEDDING OF TSUNG-WEI & WEI-SHAN</p>
-    </footer>
-
-    <!-- 單張照片放大視窗 (Lightbox) -->
-    <div id="lightbox" onclick="closeLightbox()">
-        <img src="" id="lightbox-img" alt="放大瀏覽">
+    <!-- 住宿選擇 Modal -->
+    <div id="room-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-2xl serif-en italic mb-8 border-b pb-4">Accommodation Selection</h3>
+            <div id="room-list">
+                <!-- 由 JS 渲染 -->
+            </div>
+            <div class="mt-8 flex gap-4">
+                <button class="flex-1 py-3 bg-stone-200 text-xs uppercase" onclick="closeRoomModal()">取消</button>
+                <button class="flex-1 py-3 bg-stone-900 text-white text-xs uppercase" onclick="confirmRoom()">確認選擇</button>
+            </div>
+        </div>
     </div>
+
+    <footer class="py-24 text-center border-t border-stone-200"><div class="serif-en text-4xl italic mb-6">W & S</div></footer>
+
+    <div id="lightbox" onclick="closeLightbox()"><img src="" id="lightbox-img"></div>
 
     <script>
         lucide.createIcons();
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- 重要：在此處填入你部署後取得的 Google Web App URL ---
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmONgUh6TwbTIdWs_AaZL_Ezk_wS5cbtgtyEO2U3b9dPeKyx8HTvaaAshkTGMsdLE_nw/exec"; 
+        
+        // 預設庫存，等背景加載完成後會更新
+        let currentInventory = { 
+            inventory: { "民宿雙人房": 5, "星空屋": 4, "胖胖屋": 3, "露營營位": 10 }, 
+            currentBookings: { "民宿雙人房": 0, "星空屋": 0, "胖胖屋": 0, "露營營位": 0 } 
+        };
+        let tempSelectedRoom = null;
+        let tempAddBed = "否";
+        let isInventoryLoaded = false;
 
-        // 倒數計時
+        const ROOM_INFO = [
+            { id: "民宿雙人房", price: 3980, canAddBed: true, bedPrice: 1000 },
+            { id: "星空屋", price: 3980, canAddBed: false },
+            { id: "胖胖屋", price: 3300, canAddBed: true, bedPrice: 500 },
+            { id: "露營營位", price: 1000, canAddBed: false }
+        ];
+
+        // 背景加載房況
+        async function fetchInventoryBackground() {
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    currentInventory = data;
+                    isInventoryLoaded = true;
+                    // 更新 UI 提示文字
+                    document.getElementById('selected-room-text').innerText = "點擊選擇房型 (名額有限)";
+                    console.log("房況已背景加載/更新完成");
+                    // 如果 Modal 是開著的，重新渲染列表
+                    if (document.getElementById('room-modal').style.display === 'flex') {
+                        renderRooms();
+                    }
+                }
+            } catch (e) {
+                console.warn("房況更新失敗");
+                document.getElementById('selected-room-text').innerText = "點擊選擇房型 (名額有限)";
+            }
+        }
+
+        function openRoomModal() {
+            const modal = document.getElementById('room-modal');
+            modal.style.display = 'flex';
+            renderRooms();
+            
+            // 如果背景沒加載成功，開啟時再試一次
+            if (!isInventoryLoaded) {
+                fetch(SCRIPT_URL)
+                    .then(r => r.json())
+                    .then(data => { currentInventory = data; isInventoryLoaded = true; renderRooms(); })
+                    .catch(e => {});
+            }
+        }
+
+        function renderRooms() {
+            let html = `<div class="room-card ${tempSelectedRoom === null ? 'selected' : ''}" onclick="selectRoomCard(null)"><h4 class="font-bold">不需要住宿</h4></div>`;
+            ROOM_INFO.forEach(room => {
+                const booked = currentInventory.currentBookings[room.id] || 0;
+                const total = currentInventory.inventory[room.id] || 0;
+                const remaining = total - booked;
+                const isSoldOut = remaining <= 0;
+                const isSelected = tempSelectedRoom === room.id;
+                html += `
+                <div class="room-card ${isSoldOut ? 'sold-out' : ''} ${isSelected ? 'selected' : ''}" onclick="${isSoldOut ? '' : `selectRoomCard('${room.id}')`}">
+                    <div class="flex justify-between font-bold"><span>${room.id}</span><span>$${room.price}</span></div>
+                    <div class="text-[10px] opacity-60">剩餘 ${remaining} 間</div>
+                    ${room.canAddBed ? `<div class="mt-2 text-[10px]" onclick="event.stopPropagation()"><input type="checkbox" id="bed_${room.id}" ${tempAddBed === '是' && isSelected ? 'checked' : ''} onchange="tempAddBed = this.checked ? '是' : '否'"> <label for="bed_${room.id}">加單人床 (+$${room.bedPrice})</label></div>` : ''}
+                </div>`;
+            });
+            document.getElementById('room-list').innerHTML = html;
+        }
+
+        function selectRoomCard(id) { tempSelectedRoom = id; renderRooms(); }
+        function confirmRoom() {
+            const display = document.getElementById('selected-room-text');
+            const inputType = document.getElementById('input_room_type');
+            const inputNeed = document.getElementById('input_need_room');
+            const inputBed = document.getElementById('input_add_bed');
+            if (tempSelectedRoom === null) { display.innerText = "不需要住宿"; inputType.value = "無"; inputNeed.value = "不需要"; inputBed.value = "否";
+            } else { display.innerHTML = `已選擇：${tempSelectedRoom} ${tempAddBed === '是' ? '(加床)' : ''}`; inputType.value = tempSelectedRoom; inputNeed.value = "需要"; inputBed.value = tempAddBed; }
+            closeRoomModal();
+        }
+        function closeRoomModal() { document.getElementById('room-modal').style.display = 'none'; }
+
         const weddingDate = new Date("2026-03-21T16:00:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
             const diff = weddingDate - now;
-            const countdownEl = document.getElementById('countdown');
-            if (!countdownEl) return;
-            if (diff < 0) { countdownEl.innerHTML = "<div class='text-2xl serif-en italic'>The Day is Here!</div>"; return; }
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((diff % (1000 * 60)) / 1000);
-            document.querySelector('.days').innerText = String(d).padStart(2, '0');
-            document.querySelector('.hours').innerText = String(h).padStart(2, '0');
-            document.querySelector('.mins').innerText = String(m).padStart(2, '0');
-            document.querySelector('.secs').innerText = String(s).padStart(2, '0');
+            if (diff < 0) return;
+            document.querySelector('.days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.querySelector('.hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            document.querySelector('.mins').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            document.querySelector('.secs').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
         }
         setInterval(updateCountdown, 1000); updateCountdown();
 
-        // 圖片優化載入
-        function initImages() {
-            document.querySelectorAll('.lazy-img').forEach(img => {
-                const temp = new Image();
-                temp.src = img.dataset.src || img.src;
-                temp.onload = () => {
-                    if (img.dataset.src) img.src = img.dataset.src;
-                    img.classList.add('loaded');
-                };
-            });
-            const hero = document.querySelector('.hero-bg');
-            if (hero) hero.classList.add('loaded');
-        }
-        initImages();
-
-        // --- 彈跳視窗控制 ---
-
-        // 1. 單張放大 (Lightbox)
-        function openLightbox(el) {
-            const imgUrl = el.querySelector('img').src;
-            if (!imgUrl) return;
-            // 放大時拿掉優化參數，讀取較高品質 (或者改成 tr:w-1600)
-            const highResUrl = imgUrl.split('?')[0] + '?tr=w-1600,q-90';
-            document.getElementById('lightbox-img').src = highResUrl;
-            document.getElementById('lightbox').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.remove('active');
-            if (!document.getElementById('more-photos-modal').classList.contains('active')) {
-                document.body.style.overflow = 'auto';
-            }
-        }
-
-        // 2. 更多照片 (More Photos Modal)
-        function openMorePhotos() {
-            const modal = document.getElementById('more-photos-modal');
-            modal.style.display = 'block';
-            setTimeout(() => modal.classList.add('active'), 10);
-            document.body.style.overflow = 'hidden';
-        }
-        function closeMorePhotos() {
-            const modal = document.getElementById('more-photos-modal');
-            modal.classList.remove('active');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 500);
-        }
+        function openLightbox(el) { const img = el.querySelector('img').src; document.getElementById('lightbox-img').src = img; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); if (!document.getElementById('more-photos-modal').classList.contains('active')) document.body.style.overflow = 'auto'; }
+        function openMorePhotos() { document.getElementById('more-photos-modal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeMorePhotos() { document.getElementById('more-photos-modal').classList.remove('active'); document.body.style.overflow = 'auto'; }
 
         window.onload = () => {
-            const tl = gsap.timeline();
-            tl.to(".hero-el", { opacity: 1, y: -20, stagger: 0.3, duration: 1.5, ease: "power4.out" });
-
+            fetchInventoryBackground();
+            document.querySelectorAll('.lazy-img').forEach(img => { const temp = new Image(); temp.src = img.dataset.src; temp.onload = () => { img.src = img.dataset.src; img.classList.add('loaded'); }; });
+            const hero = document.querySelector('.hero-bg'); if (hero) hero.classList.add('loaded');
+            gsap.to(".hero-el", { opacity: 1, y: -20, stagger: 0.3, duration: 1.5, ease: "power4.out" });
             gsap.to(".hero-bg", { scrollTrigger: { trigger: "body", start: "top top", end: "bottom top", scrub: true }, y: 100, scale: 1.2 });
-
-            document.querySelectorAll('.reveal-item').forEach(item => {
-                const imgWrapper = item.querySelector('.img-wrapper');
-                gsap.from(item, {
-                    scrollTrigger: { trigger: item, start: "top 85%" },
-                    y: 60, opacity: 0, duration: 1.2, ease: "power3.out",
-                    onComplete: () => { if (imgWrapper) imgWrapper.classList.add('in-view'); }
-                });
-            });
+            document.querySelectorAll('.reveal-item').forEach(item => { gsap.from(item, { scrollTrigger: { trigger: item, start: "top 85%" }, y: 60, opacity: 0, duration: 1.2, ease: "power3.out", onComplete: () => { const wrapper = item.querySelector('.img-wrapper'); if (wrapper) wrapper.classList.add('in-view'); } }); });
 
             const form = document.getElementById('rsvpForm');
-            const submitBtn = document.getElementById('submitBtn');
-            const statusMsg = document.getElementById('status-msg');
-            const validationTip = document.getElementById('validation-tip');
-
             form.onsubmit = (e) => {
                 e.preventDefault();
-                const adults = parseInt(document.getElementById('adults').value);
-                const children = parseInt(document.getElementById('children').value);
-                const meat = parseInt(document.getElementById('meat').value);
-                const veggie = parseInt(document.getElementById('veggie').value);
-                const totalPeople = adults + children;
-                const totalMeals = meat + veggie;
-
-                if (totalPeople === 0) { showStatus("⚠️ 參與人數不能為 0 位。"); return; }
-                if (totalPeople !== totalMeals) {
-                    validationTip.style.opacity = "1";
-                    showStatus(`⚠️ 總人數(${totalPeople}) 與 總餐數(${totalMeals}) 不符。`);
-                    return;
-                }
-                validationTip.style.opacity = "0";
-
-                if (!SCRIPT_URL || SCRIPT_URL.includes("YOUR_GOOGLE_SCRIPT_URL")) {
-                    showStatus("⚠️ 請先在程式碼中設定 SCRIPT_URL");
-                    return;
-                }
-
-                submitBtn.disabled = true;
-                showStatus("正在傳送您的回覆...");
-
+                const totalP = parseInt(document.getElementById('adults').value) + parseInt(document.getElementById('children').value);
+                const totalM = parseInt(document.getElementById('meat').value) + parseInt(document.getElementById('veggie').value);
+                if (totalP === 0) { showStatus("⚠️ 請填寫人數"); return; }
+                if (totalP !== totalM) { document.getElementById('validation-tip').style.opacity = 1; return; }
+                document.getElementById('submitBtn').disabled = true;
+                showStatus("正在傳送回覆...");
+                
                 fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form), mode: 'no-cors' }).then(() => {
                     setTimeout(() => {
                         showStatus("✅ 回覆成功！期待見到您。");
+                        
+                        // --- 核心修正：送出後重置表單與重新加載房況 ---
                         form.reset();
-                        submitBtn.disabled = false;
-                        setTimeout(() => statusMsg.classList.remove('active'), 5000);
+                        tempSelectedRoom = null;
+                        tempAddBed = "否";
+                        document.getElementById('selected-room-text').innerText = "點擊選擇房型 (名額有限)";
+                        
+                        // 重新背景讀取最新的庫存數據
+                        fetchInventoryBackground();
+                        
+                        document.getElementById('submitBtn').disabled = false;
+                        setTimeout(() => document.getElementById('status-msg').classList.remove('active'), 5000);
                     }, 1000);
-                }).catch((error) => {
-                    console.error("Fetch Error:", error);
-                    showStatus("❌ 傳送發生問題，請稍後再試。");
-                    submitBtn.disabled = false;
                 });
             };
-
-            function showStatus(text) {
-                statusMsg.innerText = text;
-                statusMsg.classList.add('active');
-            }
+            function showStatus(text) { const m = document.getElementById('status-msg'); m.innerText = text; m.classList.add('active'); }
         };
     </script>
 </body>
