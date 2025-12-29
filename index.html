@@ -60,9 +60,7 @@
             background-color: #e5e2df;
         }
         .img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100%; height: 100%; object-fit: cover;
             transform: scale(1.1);
             transition: transform 2s cubic-bezier(0.23, 1, 0.32, 1), opacity 1.5s ease;
             opacity: 0;
@@ -70,13 +68,13 @@
         .img-wrapper img.loaded { opacity: 1; }
         .img-wrapper.in-view img.loaded { transform: scale(1); }
 
-        /* 彈跳視窗 Lightbox (單張放大) */
+        /* 彈跳視窗 Lightbox */
         #lightbox {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.95);
-            z-index: 5000;
+            z-index: 9000;
             cursor: zoom-out;
             opacity: 0;
             transition: opacity 0.4s ease;
@@ -86,17 +84,17 @@
         #lightbox img { max-width: 90%; max-height: 80vh; margin: auto; object-fit: contain; }
 
         /* 更多照片視窗 */
-        #more-photos-modal {
+        #more-photos-modal, #room-gallery-modal {
             display: none;
             position: fixed;
             inset: 0;
             background: var(--bg-color);
-            z-index: 2000;
+            z-index: 5000;
             opacity: 0;
             transition: opacity 0.5s ease;
             overflow-y: auto;
         }
-        #more-photos-modal.active { display: block; opacity: 1; }
+        #more-photos-modal.active, #room-gallery-modal.active { display: block; opacity: 1; }
 
         /* 住宿選擇 Modal */
         .modal-overlay {
@@ -116,74 +114,42 @@
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            position: relative;
             padding: 30px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
 
         .room-card {
             border: 1px solid var(--accent-line);
-            padding: 16px;
-            margin-bottom: 12px;
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
+            padding: 16px; margin-bottom: 12px;
+            transition: all 0.3s; cursor: pointer; position: relative;
         }
         .room-card:hover:not(.sold-out) { border-color: var(--accent-red); background: #fff; }
         .room-card.selected { border-color: var(--accent-red); background: #fff6f5; outline: 2px solid var(--accent-red); }
         .room-card.sold-out { opacity: 0.4; cursor: not-allowed; background: #eee; }
         .room-card.sold-out::after {
-            content: '已售罄';
-            position: absolute;
-            top: 50%; left: 50%;
+            content: '已售罄'; position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) rotate(-10deg);
-            color: var(--accent-red);
-            font-weight: bold;
-            border: 2px solid var(--accent-red);
-            padding: 2px 8px;
+            color: var(--accent-red); font-weight: bold; border: 2px solid var(--accent-red); padding: 2px 8px;
         }
 
-        /* 流程時間軸 */
-        .schedule-line {
-            width: 1px;
-            background: var(--accent-line);
-            position: absolute;
-            left: 50%;
-            top: 0; bottom: 0;
-            transform: translateX(-50%);
-        }
+        .schedule-line { width: 1px; background: var(--accent-line); position: absolute; left: 50%; top: 0; bottom: 0; transform: translateX(-50%); }
 
-        .btn-submit, .btn-more, .btn-select-room {
-            padding: 14px 32px;
-            border: 1px solid var(--text-main);
-            position: relative;
-            transition: all 0.4s;
-            cursor: pointer;
-            font-size: 12px;
-            letter-spacing: 2px;
+        .btn-submit, .btn-more {
+            padding: 14px 32px; border: 1px solid var(--text-main);
+            transition: all 0.4s; cursor: pointer; font-size: 12px; letter-spacing: 2px;
             text-transform: uppercase;
         }
         .btn-submit:hover, .btn-more:hover { background: var(--text-main); color: #fff; }
 
         #status-msg {
-            position: fixed;
-            top: 50%; left: 50%;
-            padding: 2rem 3rem;
-            background: #1a1a1a;
-            color: #fff;
-            z-index: 6000;
-            text-align: center;
+            position: fixed; top: 50%; left: 50%; padding: 2rem 3rem; background: #1a1a1a; color: #fff; z-index: 9500;
+            text-align: center; transform: translate(-50%, -40%) scale(0.9);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); opacity: 0; visibility: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            transform: translate(-50%, -40%) scale(0.9);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0; visibility: hidden;
-            white-space: nowrap;
         }
         #status-msg.active { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
 
-        input, select, textarea {
-            background: transparent; border-bottom: 1px solid var(--accent-line); padding: 12px 0; width: 100%; outline: none;
-        }
+        input, select, textarea { background: transparent; border-bottom: 1px solid var(--accent-line); padding: 12px 0; width: 100%; outline: none; transition: border-color 0.3s; }
         input:focus, select:focus, textarea:focus { border-color: var(--accent-red); }
 
         .countdown-item span:first-child { display: block; font-size: 2.5rem; line-height: 1; }
@@ -205,6 +171,7 @@
             <a href="#location">Location</a>
             <a href="#rsvp">RSVP</a>
         </div>
+        <div class="md:hidden"><i data-lucide="menu" id="mobile-menu-btn"></i></div>
     </nav>
 
     <!-- 1. Hero Section -->
@@ -295,7 +262,7 @@
 
     <!-- 更多照片彈跳視窗 -->
     <div id="more-photos-modal">
-        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-8 flex justify-between items-center border-b">
+        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-8 flex justify-between items-center border-b border-stone-200">
             <h2 class="text-3xl serif-en italic">More Moments</h2>
             <button onclick="closeMorePhotos()"><i data-lucide="x" class="w-8 h-8"></i></button>
         </div>
@@ -304,6 +271,9 @@
             <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7411.jpg?tr=w-600"></div>
             <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8053.jpg?tr=w-600"></div>
             <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8925.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7623.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8867.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8462.jpg?tr=w-600"></div>
         </div>
     </div>
 
@@ -314,7 +284,7 @@
                 <div class="img-wrapper aspect-video mb-10"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/C1171697139215.jpg?tr=w-1200" alt="地點"></div>
                 <h3 class="text-3xl serif-en italic mb-4 text-[#a63d33]">The Venue</h3>
                 <h2 class="text-2xl font-bold mb-4">滝貓谷山林漫遊渡假村</h2>
-                <p class="text-gray-500 mb-10">苗栗縣卓蘭鎮25號</p>
+                <p class="text-gray-500 mb-10 leading-relaxed">苗栗縣卓蘭鎮25號</p>
                 <a href="https://share.google/23uKRCNJMt2eg0nzc" target="_blank" class="px-8 py-3 bg-stone-900 text-white text-[10px] tracking-widest uppercase hover:bg-black transition inline-block">Google Maps 導航</a>
             </div>
             <div class="order-first md:order-last text-6xl md:text-9xl serif-en italic opacity-10">Location</div>
@@ -345,9 +315,9 @@
                 <div class="flex flex-col h-full space-y-12">
                     <input type="tel" name="phone" required placeholder="聯絡電話 Phone">
                     <div class="w-full">
-                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2">住宿需求 Accommodation</label>
-                        <div id="room-selection-display" class="border border-dashed border-stone-400 p-4 text-center cursor-pointer hover:bg-stone-200" onclick="openRoomModal()">
-                            <p class="text-xs text-stone-500" id="selected-room-text">正在更新房況...</p>
+                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2 text-left">住宿需求 Accommodation</label>
+                        <div id="room-selection-display" class="border border-dashed border-stone-400 p-4 text-center cursor-pointer hover:bg-stone-200 transition" onclick="openRoomModal()">
+                            <p class="text-xs text-stone-500" id="selected-room-text">點擊選擇房型</p>
                             <input type="hidden" name="room_type" id="input_room_type" value="無">
                             <input type="hidden" name="need_room" id="input_need_room" value="不需要">
                             <input type="hidden" name="add_bed" id="input_add_bed" value="否">
@@ -358,7 +328,7 @@
 
                 <div class="col-span-1 md:col-span-2 text-center mt-8">
                     <button type="submit" id="submitBtn" class="btn-submit font-bold w-full md:w-auto">確認送出 SEND RSVP</button>
-                    <p id="validation-tip" class="text-[10px] text-[#a63d33] mt-4 opacity-0 transition-opacity">※ 總人數與餐食份數不符。</p>
+                    <p id="validation-tip" class="text-[10px] text-[#a63d33] mt-4 opacity-0 transition-opacity">※ 總人數與餐食份數不符，請檢查後再送出。</p>
                 </div>
             </form>
         </div>
@@ -367,20 +337,35 @@
     <!-- 住宿選擇 Modal -->
     <div id="room-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 class="text-2xl serif-en italic mb-8 border-b pb-4">Accommodation Selection</h3>
+            <h3 class="text-2xl serif-en italic mb-8 border-b pb-4 border-stone-200">Accommodation Selection</h3>
             <div id="room-list">
-                <!-- 由 JS 渲染 -->
+                <!-- 由 JS 動態渲染 -->
             </div>
             <div class="mt-8 flex gap-4">
-                <button class="flex-1 py-3 bg-stone-200 text-xs uppercase" onclick="closeRoomModal()">取消</button>
-                <button class="flex-1 py-3 bg-stone-900 text-white text-xs uppercase" onclick="confirmRoom()">確認選擇</button>
+                <button class="flex-1 py-3 bg-stone-200 text-xs uppercase tracking-widest" onclick="closeRoomModal()">取消</button>
+                <button class="flex-1 py-3 bg-stone-900 text-white text-xs uppercase tracking-widest" onclick="confirmRoom()">確認選擇</button>
             </div>
+        </div>
+    </div>
+
+    <!-- 房型專屬相簿彈窗 -->
+    <div id="room-gallery-modal">
+        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-8 flex justify-between items-center border-b border-stone-200">
+            <h2 id="room-gallery-title" class="text-2xl serif-en italic">Room Photos</h2>
+            <button onclick="closeRoomGallery()"><i data-lucide="x" class="w-8 h-8"></i></button>
+        </div>
+        <div id="room-gallery-grid" class="px-6 md:px-20 py-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- 由 JS 動態渲染 -->
+        </div>
+        <div class="py-10 text-center">
+            <button onclick="closeRoomGallery()" class="btn-more font-bold">返回房型選擇</button>
         </div>
     </div>
 
     <footer class="py-24 text-center border-t border-stone-200"><div class="serif-en text-4xl italic mb-6">W & S</div></footer>
 
-    <div id="lightbox" onclick="closeLightbox()"><img src="" id="lightbox-img"></div>
+    <!-- Lightbox DOM -->
+    <div id="lightbox" onclick="closeLightbox()"><img src="" id="lightbox-img" alt="放大瀏覽"></div>
 
     <script>
         lucide.createIcons();
@@ -388,7 +373,6 @@
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmONgUh6TwbTIdWs_AaZL_Ezk_wS5cbtgtyEO2U3b9dPeKyx8HTvaaAshkTGMsdLE_nw/exec"; 
         
-        // 預設庫存，等背景加載完成後會更新
         let currentInventory = { 
             inventory: { "民宿雙人房": 5, "星空屋": 4, "胖胖屋": 3, "露營營位": 10 }, 
             currentBookings: { "民宿雙人房": 0, "星空屋": 0, "胖胖屋": 0, "露營營位": 0 } 
@@ -397,52 +381,72 @@
         let tempAddBed = "否";
         let isInventoryLoaded = false;
 
+        // 房型資訊，示範如何放置 FB 連結 (直接將連結放入 images 陣列即可)
         const ROOM_INFO = [
-            { id: "民宿雙人房", price: 3980, canAddBed: true, bedPrice: 1000 },
-            { id: "星空屋", price: 3980, canAddBed: false },
-            { id: "胖胖屋", price: 3300, canAddBed: true, bedPrice: 500 },
-            { id: "露營營位", price: 1000, canAddBed: false }
+            { 
+                id: "民宿雙人房", price: 3980, canAddBed: true, bedPrice: 1000, 
+                images: [
+                    "https://ik.imagekit.io/ofxw3fpip/C1171697139215.jpg",
+                    ""
+                ] 
+            },
+            { 
+                id: "星空屋", price: 3980, canAddBed: false, 
+                images: [
+                    "https://scontent.frmq1-1.fna.fbcdn.net/v/t39.30808-6/520340427_1083471943883343_112114917373907990_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=f727a1&_nc_ohc=gFEFPVN8oLAQ7kNvwFZryge&_nc_oc=AdnJfkaPiCrzwlwRRyvxdhR-9jXi2SMQGOjAltJucvOiHH06GBdKqP1XSo6Q4JHOFWo&_nc_zt=23&_nc_ht=scontent.frmq1-1.fna&_nc_gid=2qvT-J9hzZ4F3ctMbIV5OQ&oh=00_Aflp4HRB0eRBnaDNTlwnVVWqkh_Xi1iGjuYZII3hcf-Gpg&oe=69580608",
+                    "https://scontent.frmq1-1.fna.fbcdn.net/v/t39.30808-6/518564588_1083471937216677_8502229110888931388_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=f727a1&_nc_ohc=FDkylwRKpoMQ7kNvwFzCiFp&_nc_oc=Adm4_x-bNTQJL7KFgPGp-gXqmL_ACinAju5OvfOKhr_L73gIYh9VeN9ppHz_H94fuE0&_nc_zt=23&_nc_ht=scontent.frmq1-1.fna&_nc_gid=-iM7Kukh9RLoncs4a7JZYg&oh=00_AfmEFxe65hcdI-hT5sBVU6TNx2cYKTOidqvby64ahZERUA&oe=69580A18"
+                ] 
+            },
+            { 
+                id: "胖胖屋", price: 3300, canAddBed: true, bedPrice: 500, 
+                images: [
+                    "https://scontent.frmq1-1.fna.fbcdn.net/v/t39.30808-6/481155005_981207280776477_7677002518542901411_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=f727a1&_nc_ohc=L-tPz5QwSSsQ7kNvwFQ8P6g&_nc_oc=AdlepoLNlISKEQi3-xlNCXYsi_ARL3oDXezXtholZPSF7qcp7BdhsBKkl-TmVP4EDfw&_nc_zt=23&_nc_ht=scontent.frmq1-1.fna&_nc_gid=bcy3HqIk-faXGaTyvDfYDQ&oh=00_AfnfYkLbZAhnFRujPI5PjQRzGxzmRxfLZpDtLfDgY_7wVw&oe=695812C1",
+                    "https://scontent.frmq1-1.fna.fbcdn.net/v/t39.30808-6/481058627_981207260776479_980033409137564455_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=f727a1&_nc_ohc=_n4zGmq3lkMQ7kNvwH8pK5C&_nc_oc=Adn5fR0Bv_iS_i4cgEtpM0bkspS4hvogP64N9o1p75QcWmwusImqFXP-jYaKDPNQJpA&_nc_zt=23&_nc_ht=scontent.frmq1-1.fna&_nc_gid=RgvOogdFLdfk6WXN3-ejyA&oh=00_AfmXPEbFTXAhqxZFqJ4wIPHc_2KR6fYh4mpIdaVv7zZHIA&oe=69581DF8"
+                ] 
+            },
+            { 
+                id: "露營營位", price: 1000, canAddBed: false, 
+                images: [
+                    "https://scontent.frmq1-1.fna.fbcdn.net/v/t39.30808-6/472912390_944222421141630_7004446734359639081_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=f727a1&_nc_ohc=BOO7tObWepQQ7kNvwFFzaHo&_nc_oc=AdnSeIw627cvZvTyctpuhonXj8sxOYbFgoRit3FprQBsAj-2colTnW5b7Stk2Y76ArM&_nc_zt=23&_nc_ht=scontent.frmq1-1.fna&_nc_gid=hniAI9MTuV2isxN1h7ScyA&oh=00_AfkS7IhqQgCPkTIVYQRTaHpgpxfdOpRGCH24ExwspmNvLA&oe=695802A8",
+                    "https://scontent.frmq1-1.fna.fbcdn.net/v/t39.30808-6/473315823_946421607588378_1373879203664171341_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=f727a1&_nc_ohc=CUnAYUx9jvAQ7kNvwFH2I94&_nc_oc=AdlWqEszyWEssBUMKfdmtVMcKKLOMh20zxYEXyf7DauggmHLkpWKjvp6UZTfxkaNz94&_nc_zt=23&_nc_ht=scontent.frmq1-1.fna&_nc_gid=pWDYsIfxnpkOI2K2uQmSjg&oh=00_AfmvafdNhomppKaxObsMlrK0jjeh3VHEDs1Sac4GmjGAXA&oe=695824AF"
+                ] 
+            }
         ];
 
-        // 背景加載房況
+        // 智慧過濾器：只在 ImageKit 連結加上處理參數，避免毀損 FB 連結
+        function getOptimizedUrl(url, type) {
+            if (!url) return "";
+            if (url.includes('ik.imagekit.io')) {
+                return type === 'thumb' ? url + "?tr=w-800,q-80" : url + "?tr=w-1600,q-90";
+            }
+            // FB 連結或其他外部連結直接回傳原網址
+            return url;
+        }
+
         async function fetchInventoryBackground() {
             try {
-                const response = await fetch(SCRIPT_URL);
+                const response = await fetch(SCRIPT_URL + "?t=" + Date.now()); 
                 if (response.ok) {
                     const data = await response.json();
                     currentInventory = data;
                     isInventoryLoaded = true;
-                    // 更新 UI 提示文字
-                    document.getElementById('selected-room-text').innerText = "點擊選擇房型 (名額有限)";
-                    console.log("房況已背景加載/更新完成");
-                    // 如果 Modal 是開著的，重新渲染列表
-                    if (document.getElementById('room-modal').style.display === 'flex') {
-                        renderRooms();
-                    }
+                    document.getElementById('selected-room-text').innerText = "點擊選擇房型";
+                    if (document.getElementById('room-modal').style.display === 'flex') renderRooms();
                 }
             } catch (e) {
-                console.warn("房況更新失敗");
-                document.getElementById('selected-room-text').innerText = "點擊選擇房型 (名額有限)";
+                document.getElementById('selected-room-text').innerText = "點擊選擇房型 (連線中)";
             }
         }
 
         function openRoomModal() {
-            const modal = document.getElementById('room-modal');
-            modal.style.display = 'flex';
+            document.getElementById('room-modal').style.display = 'flex';
             renderRooms();
-            
-            // 如果背景沒加載成功，開啟時再試一次
-            if (!isInventoryLoaded) {
-                fetch(SCRIPT_URL)
-                    .then(r => r.json())
-                    .then(data => { currentInventory = data; isInventoryLoaded = true; renderRooms(); })
-                    .catch(e => {});
-            }
+            fetchInventoryBackground(); 
         }
 
         function renderRooms() {
             let html = `<div class="room-card ${tempSelectedRoom === null ? 'selected' : ''}" onclick="selectRoomCard(null)"><h4 class="font-bold">不需要住宿</h4></div>`;
-            ROOM_INFO.forEach(room => {
+            ROOM_INFO.forEach((room, index) => {
                 const booked = currentInventory.currentBookings[room.id] || 0;
                 const total = currentInventory.inventory[room.id] || 0;
                 const remaining = total - booked;
@@ -450,25 +454,72 @@
                 const isSelected = tempSelectedRoom === room.id;
                 html += `
                 <div class="room-card ${isSoldOut ? 'sold-out' : ''} ${isSelected ? 'selected' : ''}" onclick="${isSoldOut ? '' : `selectRoomCard('${room.id}')`}">
-                    <div class="flex justify-between font-bold"><span>${room.id}</span><span>$${room.price}</span></div>
-                    <div class="text-[10px] opacity-60">剩餘 ${remaining} 間</div>
+                    <div class="flex justify-between font-bold items-start mb-1">
+                        <span>${room.id}</span>
+                        <div class="text-right">
+                            <span class="block">$${room.price}</span>
+                            <button class="text-[10px] text-[#a63d33] underline mt-1" onclick="openRoomGallery(event, ${index})">📷 查看房型相簿</button>
+                        </div>
+                    </div>
+                    <div class="text-[10px] opacity-60">剩餘 ${remaining} 間 </div>
                     ${room.canAddBed ? `<div class="mt-2 text-[10px]" onclick="event.stopPropagation()"><input type="checkbox" id="bed_${room.id}" ${tempAddBed === '是' && isSelected ? 'checked' : ''} onchange="tempAddBed = this.checked ? '是' : '否'"> <label for="bed_${room.id}">加單人床 (+$${room.bedPrice})</label></div>` : ''}
                 </div>`;
             });
             document.getElementById('room-list').innerHTML = html;
         }
 
+        function openRoomGallery(event, roomIndex) {
+            event.stopPropagation();
+            const room = ROOM_INFO[roomIndex];
+            const modal = document.getElementById('room-gallery-modal');
+            const grid = document.getElementById('room-gallery-grid');
+            document.getElementById('room-gallery-title').innerText = room.id + ' 相簿';
+            
+            let html = '';
+            room.images.forEach(imgUrl => {
+                const thumbUrl = getOptimizedUrl(imgUrl, 'thumb');
+                html += `
+                <div class="img-wrapper aspect-video cursor-zoom-in" onclick="viewPhotoInGallery('${imgUrl}')">
+                    <img src="${thumbUrl}" class="loaded" alt="房型細節">
+                </div>`;
+            });
+            grid.innerHTML = html;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRoomGallery() {
+            document.getElementById('room-gallery-modal').classList.remove('active');
+            if (document.getElementById('room-modal').style.display !== 'flex') {
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function viewPhotoInGallery(imgUrl) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = getOptimizedUrl(imgUrl, 'large');
+            lightbox.classList.add('active');
+        }
+
         function selectRoomCard(id) { tempSelectedRoom = id; renderRooms(); }
         function confirmRoom() {
             const display = document.getElementById('selected-room-text');
-            const inputType = document.getElementById('input_room_type');
-            const inputNeed = document.getElementById('input_need_room');
-            const inputBed = document.getElementById('input_add_bed');
-            if (tempSelectedRoom === null) { display.innerText = "不需要住宿"; inputType.value = "無"; inputNeed.value = "不需要"; inputBed.value = "否";
-            } else { display.innerHTML = `已選擇：${tempSelectedRoom} ${tempAddBed === '是' ? '(加床)' : ''}`; inputType.value = tempSelectedRoom; inputNeed.value = "需要"; inputBed.value = tempAddBed; }
+            if (tempSelectedRoom === null) {
+                display.innerText = "不需要住宿";
+                document.getElementById('input_room_type').value = "無";
+                document.getElementById('input_need_room').value = "不需要";
+                document.getElementById('input_add_bed').value = "否";
+            } else {
+                display.innerHTML = `<span class="font-bold">已預選：${tempSelectedRoom}</span> ${tempAddBed === '是' ? '(含加床)' : ''}`;
+                document.getElementById('input_room_type').value = tempSelectedRoom;
+                document.getElementById('input_need_room').value = "需要";
+                document.getElementById('input_add_bed').value = tempAddBed;
+            }
             closeRoomModal();
         }
-        function closeRoomModal() { document.getElementById('room-modal').style.display = 'none'; }
+        function closeRoomModal() { document.getElementById('room-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
         const weddingDate = new Date("2026-03-21T16:00:00").getTime();
         function updateCountdown() {
@@ -483,41 +534,37 @@
         setInterval(updateCountdown, 1000); updateCountdown();
 
         function openLightbox(el) { const img = el.querySelector('img').src; document.getElementById('lightbox-img').src = img; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); if (!document.getElementById('more-photos-modal').classList.contains('active')) document.body.style.overflow = 'auto'; }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); if (!document.getElementById('more-photos-modal').classList.contains('active') && !document.getElementById('room-gallery-modal').classList.contains('active') && document.getElementById('room-modal').style.display !== 'flex') document.body.style.overflow = 'auto'; }
         function openMorePhotos() { document.getElementById('more-photos-modal').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeMorePhotos() { document.getElementById('more-photos-modal').classList.remove('active'); document.body.style.overflow = 'auto'; }
 
         window.onload = () => {
-            fetchInventoryBackground();
+            fetchInventoryBackground(); 
             document.querySelectorAll('.lazy-img').forEach(img => { const temp = new Image(); temp.src = img.dataset.src; temp.onload = () => { img.src = img.dataset.src; img.classList.add('loaded'); }; });
             const hero = document.querySelector('.hero-bg'); if (hero) hero.classList.add('loaded');
             gsap.to(".hero-el", { opacity: 1, y: -20, stagger: 0.3, duration: 1.5, ease: "power4.out" });
             gsap.to(".hero-bg", { scrollTrigger: { trigger: "body", start: "top top", end: "bottom top", scrub: true }, y: 100, scale: 1.2 });
-            document.querySelectorAll('.reveal-item').forEach(item => { gsap.from(item, { scrollTrigger: { trigger: item, start: "top 85%" }, y: 60, opacity: 0, duration: 1.2, ease: "power3.out", onComplete: () => { const wrapper = item.querySelector('.img-wrapper'); if (wrapper) wrapper.classList.add('in-view'); } }); });
+            document.querySelectorAll('.reveal-item').forEach(item => { 
+                gsap.from(item, { scrollTrigger: { trigger: item, start: "top 85%" }, y: 60, opacity: 0, duration: 1.2, ease: "power3.out", onComplete: () => { const wrapper = item.querySelector('.img-wrapper'); if (wrapper) wrapper.classList.add('in-view'); } }); 
+            });
 
             const form = document.getElementById('rsvpForm');
             form.onsubmit = (e) => {
                 e.preventDefault();
                 const totalP = parseInt(document.getElementById('adults').value) + parseInt(document.getElementById('children').value);
                 const totalM = parseInt(document.getElementById('meat').value) + parseInt(document.getElementById('veggie').value);
-                if (totalP === 0) { showStatus("⚠️ 請填寫人數"); return; }
-                if (totalP !== totalM) { document.getElementById('validation-tip').style.opacity = 1; return; }
+                if (totalP === 0) { showStatus("⚠️ 請填寫參與人數"); return; }
+                if (totalP !== totalM) { document.getElementById('validation-tip').style.opacity = 1; showStatus("⚠️ 人數與餐點份數不符"); return; }
+                
                 document.getElementById('submitBtn').disabled = true;
                 showStatus("正在傳送回覆...");
-                
                 fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form), mode: 'no-cors' }).then(() => {
                     setTimeout(() => {
                         showStatus("✅ 回覆成功！期待見到您。");
-                        
-                        // --- 核心修正：送出後重置表單與重新加載房況 ---
                         form.reset();
-                        tempSelectedRoom = null;
-                        tempAddBed = "否";
+                        tempSelectedRoom = null; tempAddBed = "否";
                         document.getElementById('selected-room-text').innerText = "點擊選擇房型 (名額有限)";
-                        
-                        // 重新背景讀取最新的庫存數據
                         fetchInventoryBackground();
-                        
                         document.getElementById('submitBtn').disabled = false;
                         setTimeout(() => document.getElementById('status-msg').classList.remove('active'), 5000);
                     }, 1000);
