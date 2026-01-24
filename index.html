@@ -62,7 +62,7 @@
         .img-wrapper img.loaded { opacity: 1; }
         .img-wrapper.in-view img.loaded { transform: scale(1); }
 
-        /* Hero 專用：不使用視差，僅確保填滿 */
+        /* Hero 專用：確保填滿且重心正確 */
         .hero-img-wrapper {
             position: absolute;
             inset: 0;
@@ -77,7 +77,9 @@
         
         @media (max-width: 768px) {
             .hero-img-wrapper img {
-                object-position: center 30%; /* 手機端稍微上移重心 */
+                /* 針對橫向婚紗照在手機直式螢幕上的裁切修正 */
+                /* 40% 代表將圖片往右推，露出左側的新郎，數值可依圖片人物位置微調 */
+                object-position: 40% 30%; 
             }
         }
 
@@ -159,7 +161,7 @@
             <a href="#location" class="hover:opacity-60 transition">Location</a>
             <a href="#rsvp" class="hover:opacity-60 transition">RSVP</a>
         </div>
-        <div class="md:hidden"><i data-lucide="menu" id="mobile-menu-btn"></i></div>
+        <div class="md:hidden"><i data-lucide="menu" id="mobile-menu-btn" class="cursor-pointer"></i></div>
     </nav>
 
     <!-- 1. Hero Section -->
@@ -208,7 +210,7 @@
         </div>
     </section>
 
-    <!-- 3. Video / Teaser Images -->
+    <!-- 3. Teaser Images -->
     <section id="video" class="py-24 md:py-48 bg-stone-900 text-white relative text-center">
         <h2 class="text-xs tracking-[0.6em] uppercase opacity-40 mb-4">The Story</h2>
         <h3 class="text-3xl md:text-5xl serif-en italic mb-16 px-6">Eternal Moments</h3>
@@ -267,7 +269,7 @@
         </div>
     </section>
 
-    <!-- RSVP Section... (與前版本相同) -->
+    <!-- 7. RSVP Section -->
     <section id="rsvp" class="py-24 md:py-32 px-6 md:px-20 bg-stone-100">
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-16">
@@ -508,8 +510,8 @@
 
         function closeMorePhotos() { document.getElementById('more-photos-modal').classList.remove('active'); document.body.style.overflow = 'auto'; }
         function openLightbox(el) { 
-            const img = el.querySelector('img').src; 
-            document.getElementById('lightbox-img').src = img; 
+            const imgSrc = el.querySelector('img').src; 
+            document.getElementById('lightbox-img').src = imgSrc; 
             document.getElementById('lightbox').classList.add('active'); 
             document.body.style.overflow = 'hidden'; 
         }
@@ -535,14 +537,13 @@
         window.onload = () => {
             fetchInventoryBackground(); 
             
-            // 處理所有懶加載圖片
+            // 處理懶加載圖片
             document.querySelectorAll('.lazy-img').forEach(img => { 
                 const temp = new Image(); 
                 temp.src = img.dataset.src; 
                 temp.onload = () => { 
                     img.src = img.dataset.src; 
                     img.classList.add('loaded'); 
-                    // 僅針對 Hero 執行初始進場動畫
                     if (img.id === 'hero-img-target') {
                         gsap.to(".hero-el", { opacity: 1, y: -20, stagger: 0.2, duration: 1.5, ease: "power3.out" });
                     }
