@@ -454,38 +454,15 @@
     </footer>
 
     <script>
-        function setVh() { 
-            let vh = window.innerHeight * 0.01; 
-            document.documentElement.style.setProperty('--vh', `${vh}px`); 
-        }
-        window.addEventListener('resize', setVh); 
-        setVh();
-
+        function setVh() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
+        window.addEventListener('resize', setVh); setVh();
         lucide.createIcons();
         gsap.registerPlugin(ScrollTrigger);
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmONgUh6TwbTIdWs_AaZL_Ezk_wS5cbtgtyEO2U3b9dPeKyx8HTvaaAshkTGMsdLE_nw/exec"; 
         
         const GALLERY_PHOTOS = [
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8298.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8925.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8275.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8136.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8073.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_9044-1.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7679.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8959.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8826.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8815-1.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7927-1.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8406.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8867.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7498.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7645.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7572.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7424.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7660-1.jpg?tr=w-600",
-            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7383.jpg?tr=w-600"
+            "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8298.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8925.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8275.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8136.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8073.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_9044-1.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7679.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8959.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8826.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8815-1.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7927-1.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8406.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8867.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7498.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7645.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7572.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7424.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7660-1.jpg?tr=w-600", "https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7383.jpg?tr=w-600"
         ];
 
         let currentInventory = { inventory: { "民宿雙人房": 5, "星空屋": 4, "胖胖屋": 3, "露營營位": 10 }, currentBookings: {} };
@@ -717,6 +694,7 @@
     </script>
 </body>
 </html>
+
 
 
 
