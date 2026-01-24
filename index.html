@@ -32,7 +32,7 @@
 
         .serif-en { font-family: 'Playfair Display', serif; }
 
-        /* 視差背景層次感 */
+        /* 視差背景 */
         .parallax-container {
             position: relative;
             height: 100vh;
@@ -49,7 +49,6 @@
         }
         .parallax-bg.loaded { opacity: 1; }
 
-        /* 圖片包裝與捲動動畫 */
         .img-wrapper { overflow: hidden; position: relative; background-color: #e5e2df; }
         .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 2s cubic-bezier(0.23, 1, 0.32, 1), opacity 1.5s ease; opacity: 0; }
         .img-wrapper img.loaded { opacity: 1; }
@@ -68,7 +67,6 @@
             position: relative;
         }
 
-        /* 房型卡片 */
         .room-card {
             border: 1px solid var(--accent-line); padding: 16px; margin-bottom: 12px;
             transition: all 0.3s; cursor: pointer; position: relative;
@@ -76,7 +74,6 @@
         .room-card.selected { border-color: var(--accent-red); background: #fff6f5; outline: 2px solid var(--accent-red); }
         .room-card.sold-out { opacity: 0.4; cursor: not-allowed; background: #eee; }
 
-        /* 按鈕與輸入優化 */
         .btn-submit, .btn-more {
             padding: 14px 32px; border: 1px solid var(--text-main);
             transition: all 0.4s; cursor: pointer; font-size: 12px; letter-spacing: 2px;
@@ -84,10 +81,9 @@
         }
         .btn-submit:hover, .btn-more:hover { background: var(--text-main); color: #fff; }
 
-        input, select, textarea { background: transparent; border-bottom: 1px solid var(--accent-line); padding: 12px 0; width: 100%; outline: none; font-size: 16px; }
+        input, select, textarea { background: transparent; border-bottom: 1px solid var(--accent-line); padding: 12px 0; width: 100%; outline: none; font-size: 16px; transition: border-color 0.3s; }
         input:focus { border-color: var(--accent-red); }
 
-        /* 狀態訊息 */
         #status-msg {
             position: fixed; top: 50%; left: 50%; width: 85%; max-width: 340px;
             padding: 2.5rem 2rem; background: #1a1a1a; color: #fff; z-index: 9500;
@@ -107,7 +103,6 @@
         .countdown-item span:first-child { display: block; font-size: 2.2rem; line-height: 1; }
         @media (min-width: 768px) { .countdown-item span:first-child { font-size: 4rem; } }
 
-        /* Lightbox 放大圖片 */
         #lightbox {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
             z-index: 9900; cursor: zoom-out; align-items: center; justify-content: center;
@@ -115,12 +110,24 @@
         #lightbox.active { display: flex; }
         #lightbox img { max-width: 90%; max-height: 85vh; object-fit: contain; }
 
-        /* 全螢幕 Modal */
         .fullscreen-modal {
             display: none; position: fixed; inset: 0; background: var(--bg-color);
             z-index: 8000; overflow-y: auto; opacity: 0; transition: opacity 0.4s ease;
         }
         .fullscreen-modal.active { display: block; opacity: 1; }
+
+        /* 紙本喜帖地址區塊動畫 */
+        #address-fields {
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            max-height: 0;
+            opacity: 0;
+        }
+        #address-fields.active {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -138,12 +145,12 @@
             <a href="#location">Location</a>
             <a href="#rsvp">RSVP</a>
         </div>
-        <div class="md:hidden"><i data-lucide="menu" id="mobile-menu-btn" class="w-6 h-6"></i></div>
+        <div class="md:hidden"><i data-lucide="menu" id="mobile-menu-btn"></i></div>
     </nav>
 
     <!-- 1. Hero Section -->
     <section class="parallax-container">
-        <div class="parallax-bg hero-bg" style="background-image: url('https://ik.imagekit.io/ofxw3fpip/5D3_7623.jpg?tr=w-1080,q-80');"></div>
+        <div class="parallax-bg hero-bg" style="background-image: url('https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8630.jpg?');"></div>
         <div class="absolute inset-0 bg-black/30 z-[1]"></div>
         <div class="relative z-10 text-center text-white px-6">
             <p class="text-xs tracking-[0.5em] mb-4 opacity-0 hero-el uppercase">Our Wedding Day</p>
@@ -153,7 +160,7 @@
                 <div class="countdown-item text-center"><span class="serif-en days">00</span><p class="text-[9px] uppercase tracking-widest opacity-60">Days</p></div>
                 <div class="countdown-item text-center"><span class="serif-en hours">00</span><p class="text-[9px] uppercase tracking-widest opacity-60">Hrs</p></div>
                 <div class="countdown-item text-center"><span class="serif-en mins">00</span><p class="text-[9px] uppercase tracking-widest opacity-60">Mins</p></div>
-                <div class="countdown-item text-center"><span class="serif-en secs">00</span><p class="text-[9px] uppercase tracking-widest opacity-60">Secs</p></div>
+                <div class="countdown-item text-center"><span class="serif-en secs">00</span><span class="text-[9px] uppercase tracking-widest opacity-60">Secs</span></div>
             </div>
         </div>
     </section>
@@ -163,7 +170,7 @@
         <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-center">
             <div class="md:col-span-5 reveal-item">
                 <div class="img-wrapper aspect-[3/4] mb-8">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8867.jpg?tr=w-800" alt="新郎">
+                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8854.jpg?tr=w-600" alt="新郎">
                 </div>
                 <h3 class="text-2xl md:text-3xl serif-en italic mb-2 text-[#a63d33]">The Groom</h3>
                 <h2 class="text-2xl font-bold mb-4">劉宗韋 Tsung-Wei</h2>
@@ -172,7 +179,7 @@
             <div class="md:col-span-2 hidden md:flex justify-center"><div class="h-64 w-[1px] bg-stone-200"></div></div>
             <div class="md:col-span-5 md:mt-48 reveal-item">
                 <div class="img-wrapper aspect-[3/4] mb-8">
-                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8462.jpg?tr=w-800" alt="新娘">
+                    <img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8462.jpg?tr=w-600"" alt="新娘">
                 </div>
                 <h3 class="text-2xl md:text-3xl serif-en italic mb-2 text-[#a63d33]">The Bride</h3>
                 <h2 class="text-2xl font-bold mb-4">陳瑋珊 Wei-Shan</h2>
@@ -185,9 +192,10 @@
     <section id="video" class="py-24 md:py-48 bg-stone-900 text-white relative text-center">
         <h2 class="text-xs tracking-[0.6em] uppercase opacity-40 mb-4">The Story</h2>
         <h3 class="text-3xl md:text-5xl serif-en italic mb-16 px-6">Eternal Moments</h3>
-        <div class="max-w-5xl mx-auto px-6 aspect-video bg-black shadow-2xl overflow-hidden group">
-            <iframe class="w-full h-full opacity-70" src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=1&mute=0" frameborder="0" allowfullscreen></iframe>
-        </div>
+        <div class="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-8 mb-16">
+            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8693.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8767.jpg?tr=w-600"></div>
+            </div>
     </section>
 
     <!-- 4. Schedule -->
@@ -215,15 +223,12 @@
 
     <!-- 5. Gallery -->
     <section id="gallery" class="py-24 md:py-32 px-6 md:px-20 bg-stone-50 text-center">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4 text-left px-2">
-            <h2 class="text-5xl md:text-7xl serif-en italic">Gallery</h2>
-            <p class="text-[10px] tracking-widest text-gray-400 uppercase">點擊圖片放大瀏覽</p>
-        </div>
+        <h2 class="text-5xl md:text-7xl serif-en italic mb-16 px-2">Gallery</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-16">
-            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7921.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in md:mt-24 reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7411.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8053.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in md:mt-24 reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8925.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8693.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in md:mt-24 reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_9113.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7731.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in md:mt-24 reveal-item" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7999.jpg?tr=w-600"></div>
         </div>
         <button class="btn-more font-bold" onclick="openMorePhotos()">更多照片 VIEW MORE</button>
     </section>
@@ -253,27 +258,50 @@
                 </button>
             </div>
             
-            <form id="rsvpForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
-                <div class="flex flex-col space-y-10">
+            <form id="rsvpForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10 md:gap-y-12">
+                <!-- 左側：基本資料與喜帖需求 -->
+                <div class="flex flex-col space-y-10 md:space-y-12">
                     <input type="text" name="name" required placeholder="姓名 Name">
                     <div class="grid grid-cols-2 gap-8">
-                        <div><label class="text-[11px] text-gray-400">大人數 Adults</label><select name="adults" id="adults"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 位</option>`);</script></select></div>
-                        <div><label class="text-[11px] text-gray-400">小孩數 Children</label><select name="children" id="children"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 位</option>`);</script></select></div>
+                        <div><label class="text-[11px] text-gray-400 uppercase tracking-widest">大人 Adults</label><select name="adults" id="adults"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 位</option>`);</script></select></div>
+                        <div><label class="text-[11px] text-gray-400 uppercase tracking-widest">小孩 Children</label><select name="children" id="children"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 位</option>`);</script></select></div>
                     </div>
                     <div class="grid grid-cols-2 gap-8">
-                        <div><label class="text-[11px] text-gray-400">葷食份數 Meat</label><select name="meat" id="meat"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 份</option>`);</script></select></div>
-                        <div><label class="text-[11px] text-gray-400">素食份數 Veggie</label><select name="veggie" id="veggie"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 份</option>`);</script></select></div>
+                        <div><label class="text-[11px] text-gray-400 uppercase tracking-widest">葷食 Meat</label><select name="meat" id="meat"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 份</option>`);</script></select></div>
+                        <div><label class="text-[11px] text-gray-400 uppercase tracking-widest">素食 Veggie</label><select name="veggie" id="veggie"><script>for(let i=0; i<=10; i++) document.write(`<option value="${i}">${i} 份</option>`);</script></select></div>
+                    </div>
+
+                    <!-- 紙本喜帖需求 -->
+                    <div class="w-full">
+                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2 text-left font-bold">紙本喜帖需求 Invitation Card</label>
+                        <select name="need_paper_invite" id="need_paper_invite" onchange="toggleAddressFields(this.value)">
+                            <option value="不需要">不需要（環保救地球）</option>
+                            <option value="需要">需要（我想收藏精美喜帖）</option>
+                        </select>
+
+                        <!-- 地址輸入區塊 (動態顯示) -->
+                        <div id="address-fields" class="space-y-6">
+                            <div>
+                                <label class="text-[11px] text-gray-400 uppercase tracking-widest">收件地址 Mailing Address</label>
+                                <input type="text" name="address" id="input_address" placeholder="請輸入完整收件地址">
+                            </div>
+                            <div>
+                                <label class="text-[11px] text-gray-400 uppercase tracking-widest">收件人姓名 Recipient</label>
+                                <input type="text" name="recipient" id="input_recipient" placeholder="收件人真實姓名">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex flex-col h-full space-y-10">
+                <!-- 右側：聯絡與住宿 -->
+                <div class="flex flex-col h-full space-y-10 md:space-y-12">
                     <input type="tel" name="phone" id="main_phone" required placeholder="聯絡電話 Phone">
                     
                     <div class="w-full">
-                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2 font-bold">住宿需求 Accommodation</label>
+                        <label class="text-[14px] uppercase tracking-widest text-gray-400 block mb-2 text-left font-bold">住宿需求 Accommodation</label>
                         <div class="room-instruction-box">
                             <strong>【住宿須知】</strong><br>
-                            因有設置After party若有要盡興喝酒的可以預訂住宿。
+                            因有設置After party若有要盡興喝酒的可以預訂住宿。名額依回覆順序安排。
                         </div>
                         <div id="room-selection-display" class="border border-dashed border-stone-400 p-5 text-center cursor-pointer hover:bg-stone-200 transition" onclick="openRoomModal()">
                             <p class="text-xs text-stone-500 font-bold" id="selected-room-text">點擊此處選擇房型</p>
@@ -284,7 +312,7 @@
                         </div>
                     </div>
                     
-                    <textarea name="message" class="flex-grow min-h-[100px]" placeholder="留下對我們的祝福語..."></textarea>
+                    <textarea name="message" class="flex-grow min-h-[120px]" placeholder="想對我們說的話..."></textarea>
                 </div>
 
                 <div class="col-span-1 md:col-span-2 text-center mt-10">
@@ -295,23 +323,35 @@
         </div>
     </section>
 
-    <!-- Modals 區塊 -->
+    <!-- Modals -->
 
-    <!-- 1. 更多相片 (全螢幕) -->
+    <!-- 1. 更多相片 -->
     <div id="more-photos-modal" class="fullscreen-modal">
-        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-8 flex justify-between items-center border-b">
+        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-8 flex justify-between items-center border-b border-stone-200">
             <h2 class="text-2xl md:text-3xl serif-en italic">More Moments</h2>
             <button onclick="closeMorePhotos()"><i data-lucide="x" class="w-8 h-8"></i></button>
         </div>
-        <div class="px-6 md:px-20 py-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-            <!-- 更多相片放置處 -->
-            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7921.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7411.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8053.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8925.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_7623.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8867.jpg?tr=w-600"></div>
-            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/5D3_8462.jpg?tr=w-600"></div>
+        <div class="px-6 md:px-20 py-16 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8298.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8925.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8275.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8136.jpg?tr=w-600""></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8073.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_9044-1.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7679.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8959.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8826.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8815-1.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7927-1.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8406.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_8867.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7498.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7645.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7572.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7424.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7498.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7660-1.jpg?tr=w-600"></div>
+            <div class="img-wrapper cursor-zoom-in" onclick="openLightbox(this)"><img class="lazy-img" data-src="https://ik.imagekit.io/ofxw3fpip/Wedding2/%E5%A9%9A%E7%B4%97%E7%B2%BE%E4%BF%AE%E5%A3%93%E7%B8%AE/5D3_7383.jpg?tr=w-600"></div>
         </div>
         <div class="py-20 text-center"><button onclick="closeMorePhotos()" class="btn-more font-bold">返回主頁</button></div>
     </div>
@@ -328,14 +368,14 @@
         </div>
     </div>
 
-    <!-- 3. 房型相簿 (全螢幕) -->
+    <!-- 3. 房型相簿 -->
     <div id="room-gallery-modal" class="fullscreen-modal">
-        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-6 flex justify-between items-center border-b">
+        <div class="sticky top-0 bg-[#fcfaf7] z-10 px-6 py-6 flex justify-between items-center border-b border-stone-200">
             <h2 id="room-gallery-title" class="text-xl serif-en italic">Room Details</h2>
             <button onclick="closeRoomGallery()"><i data-lucide="x" class="w-8 h-8"></i></button>
         </div>
         <div id="room-gallery-grid" class="px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-        <div class="py-10 text-center"><button onclick="closeRoomGallery()" class="btn-more font-bold">返回房型列表</button></div>
+        <div class="py-10 text-center"><button onclick="closeRoomGallery()" class="btn-more font-bold">返回列表</button></div>
     </div>
 
     <!-- 4. 匯款資訊 -->
@@ -351,28 +391,25 @@
                 <p>戶名：<strong>劉宗韋</strong></p>
             </div>
             <div class="text-left mb-8">
-                <label class="text-xs text-stone-400 mb-2 block uppercase tracking-widest">請填寫匯款末 5 碼</label>
+                <label class="text-xs text-stone-400 mb-2 block uppercase tracking-widest">請填寫匯款帳號末 5 碼</label>
                 <input type="text" id="bank_last_5_input" maxlength="5" class="text-center font-bold border-2 border-stone-300 py-3" placeholder="00000">
                 <p id="payment-error" class="text-[10px] text-red-600 mt-2 hidden">請輸入正確的 5 位數字</p>
             </div>
             <button onclick="processFinalSubmit()" id="finalSubmitBtn" class="w-full py-4 bg-stone-900 text-white font-bold tracking-widest uppercase">完成匯款並正式送出</button>
-            <button onclick="closePaymentModal()" class="mt-4 text-xs text-stone-400 underline">返回修改 RSVP 資料</button>
+            <button onclick="closePaymentModal()" class="mt-4 text-xs text-stone-400 underline">返回修改資料</button>
         </div>
     </div>
-
-    <!-- 5. Lightbox -->
-    <div id="lightbox" onclick="closeLightbox()"><img src="" id="lightbox-img"></div>
 
     <footer class="py-24 text-center border-t border-stone-200">
         <div class="serif-en text-4xl italic mb-6">W & S</div>
         <p class="text-[10px] uppercase opacity-30 tracking-widest">&copy; 2026 THE WEDDING</p>
     </footer>
 
+    <div id="lightbox" onclick="closeLightbox()"><img src="" id="lightbox-img" alt="放大瀏覽"></div>
+
     <script>
-        // 設定手機 100vh 修正
         function setVh() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
         window.addEventListener('resize', setVh); setVh();
-
         lucide.createIcons();
         gsap.registerPlugin(ScrollTrigger);
 
@@ -386,11 +423,31 @@
         let tempAddBed = "否";
 
         const ROOM_INFO = [
-            { id: "民宿雙人房", price: 3980, canAddBed: true, bedPrice: 1000, images: ["https://ik.imagekit.io/ofxw3fpip/C1171697139215.jpg", "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800"] },
+            { id: "民宿雙人房", price: 3980, canAddBed: true, bedPrice: 1000, images: ["https://ik.imagekit.io/ofxw3fpip/C1171697139215.jpg"] },
             { id: "星空屋", price: 3980, canAddBed: false, images: ["https://images.unsplash.com/photo-1493246507139-91e8bef99c02?auto=format&fit=crop&q=80&w=800"] },
             { id: "胖胖屋", price: 3300, canAddBed: true, bedPrice: 500, images: ["https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=800"] },
             { id: "露營營位", price: 1000, canAddBed: false, images: ["https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=800"] }
         ];
+
+        // --- 新增：紙本喜帖欄位切換邏輯 ---
+        function toggleAddressFields(value) {
+            const fields = document.getElementById('address-fields');
+            const addrInput = document.getElementById('input_address');
+            const recpInput = document.getElementById('input_recipient');
+            
+            if (value === "需要") {
+                fields.classList.add('active');
+                addrInput.required = true;
+                recpInput.required = true;
+            } else {
+                fields.classList.remove('active');
+                addrInput.required = false;
+                recpInput.required = false;
+                // 清空已填內容
+                addrInput.value = "";
+                recpInput.value = "";
+            }
+        }
 
         async function fetchInventoryBackground() {
             try {
@@ -414,14 +471,14 @@
                 const isSelected = tempSelectedRoom === room.id;
                 html += `
                 <div class="room-card ${isSoldOut ? 'sold-out' : ''} ${isSelected ? 'selected' : ''}" onclick="${isSoldOut ? '' : `selectRoomCard('${room.id}')`}">
-                    <div class="flex justify-between font-bold items-start">
+                    <div class="flex justify-between font-bold items-start mb-1">
                         <span>${room.id} ($${room.price})</span>
                         <div class="text-right">
-                            <button class="text-[11px] text-[#a63d33] underline" onclick="openRoomGallery(event, ${idx})">📷 查看照片</button>
+                            <button class="text-[11px] text-[#a63d33] underline" onclick="openRoomGallery(event, ${idx})">📷 相簿</button>
                         </div>
                     </div>
                     <div class="text-[10px] ${remaining < 2 ? 'text-red-600 font-bold' : 'opacity-60'}">剩餘 ${remaining} 間</div>
-                    ${room.canAddBed ? `<div class="mt-3 text-[10px] flex items-center gap-3" onclick="event.stopPropagation()"><input type="checkbox" id="bed_${room.id}" class="w-5 h-5 accent-[#a63d33]" ${tempAddBed === '是' && isSelected ? 'checked' : ''} onchange="tempAddBed = this.checked ? '是' : '否'"> <label for="bed_${room.id}">加單人床 (+$${room.bedPrice})</label></div>` : ''}
+                    ${room.canAddBed ? `<div class="mt-3 text-[10px] flex items-center gap-2" onclick="event.stopPropagation()"><input type="checkbox" id="bed_${room.id}" class="w-4 h-4" ${tempAddBed === '是' && isSelected ? 'checked' : ''} onchange="tempAddBed = this.checked ? '是' : '否'"> <label for="bed_${room.id}">加單人床 (+$${room.bedPrice})</label></div>` : ''}
                 </div>`;
             });
             document.getElementById('room-list').innerHTML = html;
@@ -452,7 +509,6 @@
         }
         function closeRoomModal() { document.getElementById('room-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-        // RSVP 驗證消失邏輯
         ['adults', 'children', 'meat', 'veggie'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.addEventListener('change', () => document.getElementById('validation-tip').style.opacity = 0);
@@ -492,10 +548,11 @@
 
             fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form), mode: 'no-cors' }).then(() => {
                 setTimeout(() => {
-                    showStatus("✅ 資料已同步更新！感謝您的回覆。"); 
+                    showStatus("✅ 資料已同步更新！期待見到您。"); 
                     localStorage.setItem('wedding_rsvp_submitted', 'true');
                     closePaymentModal(); form.reset(); 
                     document.getElementById('selected-room-text').innerText = "點擊選擇房型";
+                    toggleAddressFields("不需要"); // 重設地址欄位
                     fetchInventoryBackground(); submitBtn.disabled = false;
                     setTimeout(() => document.getElementById('status-msg').classList.remove('active'), 5000);
                 }, 1500);
@@ -504,13 +561,11 @@
 
         function closePaymentModal() { document.getElementById('payment-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
         function showStatus(text) { const m = document.getElementById('status-msg'); m.innerText = text; m.classList.add('active'); }
-        
         function openMorePhotos() { document.getElementById('more-photos-modal').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeMorePhotos() { document.getElementById('more-photos-modal').classList.remove('active'); document.body.style.overflow = 'auto'; }
         function openLightbox(el) { const img = el.querySelector('img').src; document.getElementById('lightbox-img').src = img; document.getElementById('lightbox').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); if (!document.querySelector('.fullscreen-modal.active') && document.getElementById('room-modal').style.display !== 'flex') document.body.style.overflow = 'auto'; }
 
-        // 倒數計時
         const weddingDate = new Date("March 21, 2026 15:30:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime(); const diff = weddingDate - now;
