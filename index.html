@@ -40,7 +40,7 @@
             height: calc(var(--vh, 1vh) * 100); 
             overflow: hidden;
             display: flex; 
-            align-items: center; /* 垂直置中控制 */
+            align-items: center; 
             justify-content: center;
             background-color: #1a1a1a;
         }
@@ -76,7 +76,6 @@
         
         @media (max-width: 768px) {
             .hero-img-wrapper img {
-                /* object-position: 水平 垂直 */
                 object-position: 40% 30%; 
             }
         }
@@ -142,6 +141,12 @@
             z-index: 8000; overflow-y: auto; opacity: 0; transition: opacity 0.4s ease;
         }
         .fullscreen-modal.active { display: block; opacity: 1; }
+
+        .color-dot {
+            width: 48px; height: 48px; border-radius: 9999px; border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        .color-dot:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -172,8 +177,6 @@
         
         <div class="absolute inset-0 bg-black/40 z-[1]"></div>
         
-        <!-- 下方 div 的 translate-y-[80px] 可以調整文字上下位置 -->
-        <!-- 正值往下移，負值往上移，例如：translate-y-[-100px] -->
         <div class="relative z-10 text-center text-white px-6 transform translate-y-[-100px] md:translate-y-[-100px]">
             <p class="text-xs tracking-[0.5em] mb-4 opacity-0 hero-el uppercase">Our Wedding Day</p>
             <p class="text-sm tracking-[0.5em] mb-6 hero-el opacity-0">2026.03.21</p>
@@ -266,6 +269,49 @@
                 <a href="https://share.google/23uKRCNJMt2eg0nzc" target="_blank" class="px-8 py-4 bg-stone-900 text-white text-[10px] tracking-widest uppercase inline-block">Google Maps 導航</a>
             </div>
             <div class="order-first md:order-last text-6xl md:text-9xl serif-en italic opacity-10 text-center">Location</div>
+        </div>
+    </section>
+
+    <!-- 6.5 Social & Dress Code Section -->
+    <section id="community" class="py-24 md:py-32 px-6 md:px-20 bg-white">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
+            <!-- Left: Community -->
+            <div class="reveal-item">
+                <h3 class="text-2xl md:text-3xl serif-en italic mb-6 text-[#a63d33]">Join Our Community</h3>
+                <h2 class="text-2xl font-bold mb-6">婚禮社群</h2>
+                <p class="text-gray-500 text-sm mb-10 leading-relaxed">我們建立了專屬的婚禮社群，將在裡面分享即時資訊與婚禮當天的精采瞬間。歡迎點擊下方按鈕或掃描二維碼加入我們！</p>
+                
+                <div class="flex flex-col sm:flex-row items-center gap-8">
+                    <div class="w-32 h-32 bg-stone-100 p-2 border border-stone-200 shadow-inner">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://line.me/ti/g2/P8amlRUPBbr28bVtnVnm4cwhi8ChZeFCHbEllw?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" alt="婚禮社群 QR Code">
+                    </div>
+                    <div class="text-center sm:text-left">
+                        <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-4">Line OpenChat</p>
+                        <a href="https://line.me/ti/g2/P8amlRUPBbr28bVtnVnm4cwhi8ChZeFCHbEllw?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" class="px-8 py-4 bg-[#06C755] text-white text-[10px] tracking-widest uppercase inline-block font-bold">點此加入社群</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Dress Code (已改為奶茶與大地色系) -->
+            <div class="reveal-item">
+                <h3 class="text-2xl md:text-3xl serif-en italic mb-6 text-[#a63d33]">Dress Code</h3>
+                <h2 class="text-2xl font-bold mb-6">著裝建議</h2>
+                <p class="text-gray-500 text-sm mb-10 leading-relaxed">為了讓婚禮照片呈現更完美和諧的視覺效果，誠摯邀請各位賓客穿著以下建議色系 (Semi-Formal)。</p>
+                
+                <div class="space-y-6">
+                    <p class="text-[11px] text-stone-400 uppercase tracking-widest">Earth Tones Palette</p>
+                    <div class="flex space-x-4">
+                        <div class="color-dot bg-[#E5DACE]" title="Milk Tea"></div>
+                        <div class="color-dot bg-[#D4C4B5]" title="Sand"></div>
+                        <div class="color-dot bg-[#BFA38A]" title="Latte"></div>
+                        <div class="color-dot bg-[#8C7355]" title="Earth"></div>
+                    </div>
+                    <div class="pt-6 border-t border-stone-100">
+                        <p class="text-sm font-medium text-stone-800 italic">建議：奶茶色、米白色、大地色系</p>
+                        <p class="text-[11px] text-[#a63d33] mt-2 leading-loose">※ 請避開與婚紗相撞的全白色系或過於休閒的打扮。</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
