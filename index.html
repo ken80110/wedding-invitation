@@ -378,8 +378,23 @@
     </section>
 
     <!-- Modals -->
+    <!-- Duplicate Record Modal -->
+    <div id="duplicate-modal" class="modal-overlay">
+        <div class="modal-content text-center">
+            <div class="mb-6"><i data-lucide="alert-circle" class="w-12 h-12 mx-auto text-[#a63d33]"></i></div>
+            <h3 class="text-2xl serif-en italic mb-4">偵測到重複紀錄</h3>
+            <p class="text-sm text-gray-500 mb-8 leading-relaxed">此電話號碼已有填寫紀錄。<br>若欲修改先前資料，請點選「直接更新」；<br>若要幫親友代填，請點選「清空重填」。</p>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="unlockForm(); closeDuplicateModal();" class="py-4 bg-stone-200 text-[10px] tracking-widest uppercase font-bold">清空重填</button>
+                <button onclick="executeForcedSubmit();" class="py-4 bg-stone-900 text-white text-[10px] tracking-widest uppercase font-bold">直接更新</button>
+            </div>
+            <button onclick="closeDuplicateModal();" class="mt-4 text-xs text-stone-400 underline">返回檢查</button>
+        </div>
+    </div>
+
+    <!-- More Photos Modal -->
     <div id="more-photos-modal" class="fullscreen-modal">
-        <div class="sticky top-0 bg-[#fcfaf7] z-50 px-6 py-8 flex justify-between items-center border-b border-stone-200">
+        <div class="sticky top-0 bg-[#fcfaf7] z-50 px-6 py-8 flex justify-between items-center border-b">
             <h2 class="text-2xl md:text-3xl serif-en italic">More Moments</h2>
             <button onclick="closeMorePhotos()"><i data-lucide="x" class="w-8 h-8"></i></button>
         </div>
@@ -387,6 +402,7 @@
         <div class="py-20 text-center"><button onclick="closeMorePhotos()" class="btn-more font-bold">返回主頁</button></div>
     </div>
 
+    <!-- Room Modal -->
     <div id="room-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 class="text-2xl serif-en italic mb-6 border-b pb-4">Room Selection</h3>
@@ -398,6 +414,7 @@
         </div>
     </div>
 
+    <!-- Room Gallery Modal -->
     <div id="room-gallery-modal" class="fullscreen-modal">
         <div class="sticky top-0 bg-[#fcfaf7] z-50 px-6 py-6 flex justify-between items-center border-b">
             <h2 id="room-gallery-title" class="text-xl serif-en italic">Room Details</h2>
@@ -407,6 +424,7 @@
         <div class="py-10 text-center"><button onclick="closeRoomGallery()" class="btn-more font-bold">返回房型列表</button></div>
     </div>
 
+    <!-- Payment Modal -->
     <div id="payment-modal" class="modal-overlay">
         <div class="modal-content text-center">
             <div class="mb-6"><i data-lucide="credit-card" class="w-12 h-12 mx-auto text-[#a63d33]"></i></div>
@@ -423,7 +441,7 @@
                 <input type="text" id="bank_last_5_input" maxlength="5" class="text-center font-bold border-2 border-stone-300 py-3" placeholder="00000">
                 <p id="payment-error" class="text-[10px] text-red-600 mt-2 hidden">請輸入正確的 5 位數字</p>
             </div>
-            <button onclick="processFinalSubmit()" id="finalSubmitBtn" class="w-full py-4 bg-stone-900 text-white font-bold tracking-widest uppercase">完成匯款並正式送出</button>
+            <button onclick="processFinalSubmit()" id="finalSubmitBtn" class="w-full py-4 bg-stone-900 text-white font-bold tracking-widest uppercase rounded-sm">完成匯款並正式送出</button>
             <button onclick="closePaymentModal()" class="mt-4 text-xs text-stone-400 underline">返回修改資料</button>
         </div>
     </div>
@@ -699,5 +717,6 @@
     </script>
 </body>
 </html>
+
 
 
