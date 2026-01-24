@@ -32,7 +32,7 @@
 
         .serif-en { font-family: 'Playfair Display', serif; }
 
-        /* --- Hero Section 修正 --- */
+        /* --- Hero Section 容器 --- */
         .parallax-container {
             position: relative;
             width: 100%;
@@ -40,7 +40,7 @@
             height: calc(var(--vh, 1vh) * 100); 
             overflow: hidden;
             display: flex; 
-            align-items: center; 
+            align-items: center; /* 垂直置中控制 */
             justify-content: center;
             background-color: #1a1a1a;
         }
@@ -62,7 +62,6 @@
         .img-wrapper img.loaded { opacity: 1; }
         .img-wrapper.in-view img.loaded { transform: scale(1); }
 
-        /* Hero 專用：確保填滿且重心正確 */
         .hero-img-wrapper {
             position: absolute;
             inset: 0;
@@ -77,9 +76,8 @@
         
         @media (max-width: 768px) {
             .hero-img-wrapper img {
-                /* 針對橫向婚紗照在手機直式螢幕上的裁切修正 */
-                /* 40% 代表將圖片往右推，露出左側的新郎，數值可依圖片人物位置微調 */
-                object-position: 20% 30%; 
+                /* object-position: 水平 垂直 */
+                object-position: 40% 30%; 
             }
         }
 
@@ -174,7 +172,9 @@
         
         <div class="absolute inset-0 bg-black/40 z-[1]"></div>
         
-        <div class="relative z-10 text-center text-white px-6">
+        <!-- 下方 div 的 translate-y-[80px] 可以調整文字上下位置 -->
+        <!-- 正值往下移，負值往上移，例如：translate-y-[-100px] -->
+        <div class="relative z-10 text-center text-white px-6 transform translate-y-[-100px] md:translate-y-[-100px]">
             <p class="text-xs tracking-[0.5em] mb-4 opacity-0 hero-el uppercase">Our Wedding Day</p>
             <p class="text-sm tracking-[0.5em] mb-6 hero-el opacity-0">2026.03.21</p>
             <h1 class="text-5xl md:text-9xl leading-none serif-en italic mb-12 hero-el opacity-0">Eternal Bonds</h1>
@@ -537,7 +537,6 @@
         window.onload = () => {
             fetchInventoryBackground(); 
             
-            // 處理懶加載圖片
             document.querySelectorAll('.lazy-img').forEach(img => { 
                 const temp = new Image(); 
                 temp.src = img.dataset.src; 
@@ -550,7 +549,6 @@
                 }; 
             });
 
-            // 區塊浮現動畫
             document.querySelectorAll('.reveal-item').forEach(item => { 
                 gsap.from(item, { 
                     scrollTrigger: { trigger: item, start: "top 90%" }, 
@@ -566,6 +564,4 @@
         };
     </script>
 </body>
-
 </html>
-
