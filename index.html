@@ -12,37 +12,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-    // 1. 初始化 Lucide 圖示 (如果你有引用 lucide.js)
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
+        document.addEventListener('DOMContentLoaded', () => {
+        // 檢查元素是否存在，避免 null 錯誤
+            const menuToggle = document.getElementById('menu-toggle');
+            const menuClose = document.getElementById('menu-close');
+            const menuOverlay = document.getElementById('full-screen-menu');
+            const navLinks = document.querySelectorAll('#full-screen-menu a');
 
-    // 2. 獲取 DOM 元素
-    const menuToggle = document.getElementById('menu-toggle');
-    const menuClose = document.getElementById('menu-close');
-    const menuOverlay = document.getElementById('full-screen-menu');
-    const navLinks = document.querySelectorAll('#full-screen-menu a');
+            if (menuToggle && menuOverlay) {
+                // 打開
+                menuToggle.addEventListener('click', () => {
+                        menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                        document.body.style.overflow = 'hidden';
+                });
 
-    // 3. 定義開關邏輯
-    const toggleMenu = (isOpen) => {
-        if (isOpen) {
-            menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
-            // 禁止頁面捲動 (避免選單打開時後方還能滑動)
-            document.body.style.overflow = 'hidden';
-        } else {
-            menuOverlay.classList.add('opacity-0', 'pointer-events-none');
-            document.body.style.overflow = 'auto';
-        }
-    };
+        // 關閉 (按 X)
+            if (menuClose) {
+                    menuClose.addEventListener('click', () => {
+                        menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+                        document.body.style.overflow = 'auto';
+                });
+            }
 
-    // 4. 綁定事件
-    menuToggle.addEventListener('click', () => toggleMenu(true));
-    menuClose.addEventListener('click', () => toggleMenu(false));
-
-    // 點擊選單連結後，自動關閉選單並跳轉
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => toggleMenu(false));
-    });
+        // 點擊連結自動關閉
+            navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+                        document.body.style.overflow = 'auto';
+                });
+            });
+            } else {
+                console.error("找不到選單元素，請檢查 HTML 中的 ID 是否正確。");
+            }
+    
+            // 初始化圖示
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            });
     </script>
 
     <style>
@@ -743,6 +750,7 @@
     </script>
 </body>
 </html>
+
 
 
 
